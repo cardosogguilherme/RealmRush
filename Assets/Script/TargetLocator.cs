@@ -6,11 +6,12 @@ using UnityEngine;
 public class TargetLocator : MonoBehaviour
 {
     [SerializeField] Transform weapon;
+    [SerializeField] ParticleSystem boltParticleSystem;
     Transform target;
 
     void Start()
     {
-        target = FindObjectOfType<EnemyMover>().transform;
+        target = FindObjectOfType<EnemyMover>()?.transform;
     }
 
     void Update()
@@ -20,6 +21,13 @@ public class TargetLocator : MonoBehaviour
 
     private void AimWeapon()
     {
+        if (target == null) {
+            boltParticleSystem.Stop();
+            return;
+        } else if (boltParticleSystem.isStopped) {
+            boltParticleSystem.Play();
+        }
+
         weapon.LookAt(target);
         // var currentDirection = weapon.forward != Vector3.zero ? weapon.forward : new Vector3Int(0, 0, 1);
         // var directionToWaypoint = (target.position - weapon.position).normalized;

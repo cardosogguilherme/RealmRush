@@ -30,7 +30,7 @@ public class EnemyMover : MonoBehaviour
 
             while (!Mathf.Approximately(Vector3.Dot(transform.forward, directionToWaypoint), 1f))
             {
-                Debug.Log($"currentDirection:{currentDirection} directionToWaypoint:{directionToWaypoint}");
+                // Debug.Log($"currentDirection:{currentDirection} directionToWaypoint:{directionToWaypoint}");
                 transform.forward = Vector3.Slerp(currentDirection, directionToWaypoint, timer * 10f);
                 timer += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
