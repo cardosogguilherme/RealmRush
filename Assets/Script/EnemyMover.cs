@@ -20,15 +20,16 @@ public class EnemyMover : MonoBehaviour
             var endPosition = waypoint.transform.position;
             float travelPercent = 0f;
             
-            var currentDirection = transform.forward;
-            var directionToWaypoint = (waypoint.transform.position - transform.position).normalized;
-            var timer = 0f;
-            while (!Mathf.Approximately(Vector3.Dot(transform.forward, directionToWaypoint), 1f))
-            {
-                transform.forward = Vector3.Slerp(currentDirection, directionToWaypoint, timer * 10f);
-                timer += Time.deltaTime;
-                yield return new WaitForEndOfFrame();
-            }
+            // var currentDirection = transform.forward;
+            // var directionToWaypoint = (waypoint.transform.position - transform.position).normalized;
+            // var timer = 0f;
+            
+            // while (!Mathf.Approximately(Vector3.Dot(transform.forward, directionToWaypoint), 1f))
+            // {
+            //     transform.forward = Vector3.Slerp(currentDirection, directionToWaypoint, timer * 10f);
+            //     timer += Time.deltaTime;
+            //     yield return new WaitForEndOfFrame();
+            // }
 
             transform.LookAt(endPosition);
 
