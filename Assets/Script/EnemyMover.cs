@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyMover : MonoBehaviour
@@ -9,7 +10,26 @@ public class EnemyMover : MonoBehaviour
 
     void Start()
     {
+        FindPath();
+        ReturnToStart();
         StartCoroutine(FollowPath());
+    }
+
+    private void FindPath()
+    {
+        path.Clear();
+
+        GameObject waypointsParent = GameObject.FindGameObjectWithTag("Path");
+
+        foreach (Transform waypoint in waypointsParent.transform)
+        {
+            path.Add(waypoint.GetComponent<Waypoint>());
+        }
+    }
+
+    private void ReturnToStart()
+    {
+        transform.position = path[0].transform.position;
     }
 
     private IEnumerator FollowPath()
@@ -44,5 +64,7 @@ public class EnemyMover : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
         }
+        
+        Destroy(gameObject);
     }
 }
