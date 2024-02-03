@@ -7,28 +7,43 @@ public class TargetLocator : MonoBehaviour
 {
     [SerializeField] Transform weapon;
     [SerializeField] ParticleSystem boltParticleSystem;
+    [SerializeField] float range = 15f;
     Transform target;
 
-    void Start()
+   void Update()
     {
-        target = FindObjectOfType<EnemyMover>()?.transform;
+        FindClosestTarget();
+        AimWeapon();
     }
 
-    void Update()
+    private void FindClosestTarget()
     {
-        AimWeapon();
+        Enemy[] enemies = FindObjectsOfType<Enemy>();
+        Transform closestTarget = null;
+        float maxDistance = Mathf.Infinity;
+
+        foreach (var enemy in enemies)
+        {
+            float targetDistance = Vector3.Distance(transform.position, enemy.transform.position);
+
+            if (targetDistance < maxDistance)
+            {
+                closestTarget = enemy.transform;
+                maxDistance = targetDistance;
+            }
+        }
+
+        target = closestTarget;
     }
 
     private void AimWeapon()
     {
-        if (target == null) {
-            boltParticleSystem.Stop();
-            return;
-        } else if (boltParticleSystem.isStopped) {
-            boltParticleSystem.Play();
-        }
-
+        float targetDistance = Vector3.Distance(transform.position, target.position);
         weapon.LookAt(target);
+
+        Attack(targetDistance < range);
+    
+
         // var currentDirection = weapon.forward != Vector3.zero ? weapon.forward : new Vector3Int(0, 0, 1);
         // var directionToWaypoint = (target.position - weapon.position).normalized;
         // var timer = 0f;
@@ -43,5 +58,11 @@ public class TargetLocator : MonoBehaviour
         //     weapon.forward = Vector3.Slerp(currentDirection, directionToWaypoint, timer * 10f);
         //     timer += Time.deltaTime;
         // }
+    }
+
+    private void Attack(bool isActive)
+    {
+        var emissionModule = boltParticleSystem.emission;
+        emissionModule.enabled = isActive;
     }
 }
