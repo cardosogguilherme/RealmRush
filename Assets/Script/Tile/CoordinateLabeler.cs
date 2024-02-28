@@ -31,7 +31,7 @@ public class CoordinateLabeler : MonoBehaviour
             UpdateObjectName();
         }
 
-        SetLabelColor();
+        SetLabelColorByState();
         ToogleLabels();
     }
 
@@ -43,7 +43,7 @@ public class CoordinateLabeler : MonoBehaviour
         }
     }
 
-    private void SetLabelColor()
+    private void SetLabelColorByState()
     {
         if (!waypoint.IsPlaceble)
         {
