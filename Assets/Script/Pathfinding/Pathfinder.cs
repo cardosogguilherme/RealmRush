@@ -4,23 +4,55 @@ using UnityEngine;
 
 public class Pathfinder : MonoBehaviour
 {
+    [SerializeField] Vector2Int startCoordinates;
+    [SerializeField] Vector2Int destinationCoordinates;
     [SerializeField] Node currentSearchNode;
-    Vector2Int[] directions = { Vector2Int.right, Vector2Int.left, Vector2Int.up, Vector2Int.down };
-    GridManager gridManager;
-    Dictionary<Vector2Int, Node> grid;
+
+    private Node startNode;
+    private Node destinationNode;
+
+    private Queue<Node> frontier = new Queue<Node>();
+    private Dictionary<Vector2Int, Node> reached = new Dictionary<Vector2Int, Node>();
+    private Vector2Int[] directions = { Vector2Int.right, Vector2Int.left, Vector2Int.up, Vector2Int.down };
+    private GridManager gridManager;
+    private Dictionary<Vector2Int, Node> grid = new Dictionary<Vector2Int, Node>();
 
     void Awake()
     {
         gridManager = FindObjectOfType<GridManager>();
+
         if (gridManager != null)
         {
             grid = gridManager.Grid;
+        }
+
+        startNode = new Node(startCoordinates, true);
+        destinationNode = new Node(destinationCoordinates, true);
+    }
+
+    private void BreathFirstSearech()
+    {
+        bool isRunning = true;
+
+        frontier.Enqueue(startNode);
+        reached.Add(startCoordinates, startNode);
+
+        while (frontier.Count > 0 && isRunning)
+        {
+            currentSearchNode = frontier.Dequeue();
+            currentSearchNode.isExplored = true;
+            ExploreNeighbors();
+
+            if (currentSearchNode.coordinates == destinationCoordinates)
+            {
+                isRunning = false;
+            }
         }
     }
 
     void Start()
     {
-        ExploreNeighbors();
+        BreathFirstSearech();
     }
 
     void ExploreNeighbors()
@@ -34,10 +66,15 @@ public class Pathfinder : MonoBehaviour
             if (grid.ContainsKey(neighborCoords))
             {
                 neighbors.Add(grid[neighborCoords]);
+            }
+        }
 
-                // TODO Remove after testing
-                grid[neighborCoords].isExplored = true;
-                grid[currentSearchNode.coordinates].isPath = true;
+        foreach (var neighbor in neighbors)
+        {
+            if (!reached.ContainsKey(neighbor.coordinates) && neighbor.isWalkable)
+            {
+                reached.Add(neighbor.coordinates, neighbor);
+                frontier.Enqueue(neighbor);
             }
         }
     }
