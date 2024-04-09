@@ -6,8 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Enemy))]
 public class EnemyMover : MonoBehaviour
 {
-    [SerializeField] List<Waypoint> path = new List<Waypoint>();
-    [SerializeField] [Range(0f, 5f)] float speed = 1f;
+    [SerializeField] List<Tile> path = new List<Tile>();
+    [SerializeField][Range(0f, 5f)] float speed = 1f;
 
     Enemy enemy;
 
@@ -15,7 +15,7 @@ public class EnemyMover : MonoBehaviour
     {
         enemy = GetComponent<Enemy>();
     }
-    
+
     void OnEnable()
     {
         FindPath();
@@ -31,7 +31,7 @@ public class EnemyMover : MonoBehaviour
 
         foreach (Transform child in parent.transform)
         {
-            Waypoint waypoint = child.GetComponent<Waypoint>();
+            Tile waypoint = child.GetComponent<Tile>();
             if (waypoint != null)
             {
                 path.Add(waypoint);
@@ -51,12 +51,13 @@ public class EnemyMover : MonoBehaviour
             var startPosition = transform.position;
             var endPosition = waypoint.transform.position;
             float travelPercent = 0f;
-            
+
             var currentDirection = transform.forward != Vector3.zero ? transform.forward : new Vector3Int(0, 0, 1);
             var directionToWaypoint = (waypoint.transform.position - transform.position).normalized;
             var timer = 0f;
-        
-            if (directionToWaypoint == Vector3.zero) {
+
+            if (directionToWaypoint == Vector3.zero)
+            {
                 directionToWaypoint = new Vector3Int(0, 0, 1);
             }
 
@@ -70,7 +71,8 @@ public class EnemyMover : MonoBehaviour
 
             // transform.LookAt(endPosition);
 
-            while (travelPercent < 1f) {
+            while (travelPercent < 1f)
+            {
                 travelPercent += Time.deltaTime * speed;
                 transform.position = Vector3.Lerp(startPosition, endPosition, travelPercent);
                 yield return new WaitForEndOfFrame();
