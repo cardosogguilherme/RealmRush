@@ -21,15 +21,14 @@ public class EnemyMover : MonoBehaviour
 
     void OnEnable()
     {
-        FindPath();
+        RecalculatePath();
         ReturnToStart();
         StartCoroutine(FollowPath());
     }
 
-    private void FindPath()
+    private void RecalculatePath()
     {
         path.Clear();
-
         path = pathfinder.GetNewPath();
     }
 

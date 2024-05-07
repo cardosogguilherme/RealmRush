@@ -35,8 +35,6 @@ public class Pathfinder : MonoBehaviour
 
     void Start()
     {
-
-
         GetNewPath();
     }
 
@@ -135,5 +133,10 @@ public class Pathfinder : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void NotifyReceivers()
+    {
+        BroadcastMessage("RecalculatePath", SendMessageOptions.DontRequireReceiver);
     }
 }
